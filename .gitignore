@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Clasp Local Settings (prevent pushing credentials/config to git)
+.clasp.json
+
+# Local documentation or notes not for repo
+# Add any specific large data files if present
