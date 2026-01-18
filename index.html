@@ -101,6 +101,12 @@
                         class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 bg-gray-50"
                         placeholder="例如：&#10;1/5 下午 2:00&#10;1/6 上午 10:00"></textarea>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">問題或需求概述</label>
+                    <textarea id="user_request" rows="3" onchange="syncData()"
+                        class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 bg-gray-50"
+                        placeholder="請簡述您的狀況或需求..."></textarea>
+                </div>
                 <div class="flex space-x-2 pt-2">
                     <button type="button" onclick="toReview()"
                         class="w-3/5 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition font-bold shadow">下一步</button>
@@ -130,6 +136,12 @@
                 <div>
                     <span class="text-gray-500 block mb-1">期望時間</span>
                     <pre id="review-time"
+                        class="font-bold text-gray-800 whitespace-pre-wrap font-sans bg-white p-2 rounded border">
+                    </pre>
+                </div>
+                <div>
+                    <span class="text-gray-500 block mb-1">問題或需求概述</span>
+                    <pre id="review-request"
                         class="font-bold text-gray-800 whitespace-pre-wrap font-sans bg-white p-2 rounded border">
                     </pre>
                 </div>
@@ -341,6 +353,13 @@
                 emailVal = emailEl.value.trim();
             }
 
+            // 新增：取得需求概述
+            const requestEl = document.getElementById('user_request');
+            let requestVal = "";
+            if (requestEl) {
+                requestVal = requestEl.value.trim();
+            }
+
             // 2. 必填檢查
             if (!name || !phone || !time) {
                 showToast("請完整填寫姓名、電話與期望時間", true);
@@ -358,6 +377,7 @@
 
             document.getElementById('review-staff').textContent = document.getElementById('staff').value || "(不指定)";
             document.getElementById('review-time').textContent = time;
+            document.getElementById('review-request').textContent = (requestVal !== "") ? requestVal : "(未填寫)";
 
             // 4. 切換畫面
             syncData('preview_form');
@@ -424,7 +444,8 @@
                 form_phone: document.getElementById('phone').value,
                 form_email: document.getElementById('email').value.trim(),
                 form_staff: document.getElementById('staff').value,
-                form_time: document.getElementById('time_slots').value
+                form_time: document.getElementById('time_slots').value,
+                form_request: document.getElementById('user_request').value.trim()
             };
         }
     </script>
