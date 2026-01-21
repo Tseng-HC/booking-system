@@ -1,0 +1,13 @@
+{
+  "name": "github-repo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "url": "git remote get-url origin",
+    "開啟預約頁面": "start \"\" \"https://tseng-hc.github.io/booking-system/index.html?gasId=AKfycbxGJQ-fTCOLOAnh7LsS2Ixo0mGJWdpQhX2Be9XG5Xd4CWLfwclkDSoLivwEqYOgd0Bf4A&liffId=2008806287-TVUjhnWp\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

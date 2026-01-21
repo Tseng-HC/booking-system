@@ -94,6 +94,14 @@
                     </select>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">是否有三個月內診斷證明、照會、醫囑</label>
+                    <div class="mt-2 flex items-center">
+                        <input type="checkbox" id="has_medical_proof" onchange="syncData()"
+                            class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                        <label for="has_medical_proof" class="ml-2 text-sm text-gray-600">有</label>
+                    </div>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700">期望預約時段
                         <span class="text-red-600">*</span>
                     </label>
@@ -132,6 +140,10 @@
                 <div class="flex justify-between border-b border-gray-200 pb-1">
                     <span class="text-gray-500 review-staff-label">指定人員</span><span id="review-staff"
                         class="font-bold text-gray-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-gray-200 pb-1">
+                    <span class="text-gray-500">診斷證明/照會/醫囑</span>
+                    <span id="review-medical-proof" class="font-bold text-gray-800"></span>
                 </div>
                 <div>
                     <span class="text-gray-500 block mb-1">期望時間</span>
@@ -360,6 +372,13 @@
                 requestVal = requestEl.value.trim();
             }
 
+            // 新增：取得醫療證明勾選狀態
+            const hasMedicalProofEl = document.getElementById('has_medical_proof');
+            let hasMedicalProof = false;
+            if (hasMedicalProofEl) {
+                hasMedicalProof = hasMedicalProofEl.checked;
+            }
+
             // 2. 必填檢查
             if (!name || !phone || !time) {
                 showToast("請完整填寫姓名、電話與期望時間", true);
@@ -376,6 +395,7 @@
             document.getElementById('review-email').textContent = (emailVal !== "") ? emailVal : "(未填寫)";
 
             document.getElementById('review-staff').textContent = document.getElementById('staff').value || "(不指定)";
+            document.getElementById('review-medical-proof').textContent = hasMedicalProof ? "有" : "無";
             document.getElementById('review-time').textContent = time;
             document.getElementById('review-request').textContent = (requestVal !== "") ? requestVal : "(未填寫)";
 
@@ -445,6 +465,7 @@
                 form_email: document.getElementById('email').value.trim(),
                 form_staff: document.getElementById('staff').value,
                 form_time: document.getElementById('time_slots').value,
+                form_medical_proof: document.getElementById('has_medical_proof').checked ? "有" : "無",
                 form_request: document.getElementById('user_request').value.trim()
             };
         }
