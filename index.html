@@ -95,11 +95,30 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">是否有三個月內診斷證明、照會、醫囑</label>
-                    <div class="mt-2 flex items-center">
-                        <input type="checkbox" id="has_medical_proof" onchange="syncData()"
-                            class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                        <label for="has_medical_proof" class="ml-2 text-sm text-gray-600">有</label>
+                    <div class="mt-2 flex gap-4">
+                        <label class="inline-flex items-center"><input type="radio" name="diagnosis" value="是"
+                                onchange="syncData()" class="mr-2 focus:ring-green-500 text-green-600"><span
+                                class="text-sm">是</span></label>
+                        <label class="inline-flex items-center"><input type="radio" name="diagnosis" value="否" checked
+                                onchange="syncData()" class="mr-2 focus:ring-green-500 text-green-600"><span
+                                class="text-sm">否</span></label>
                     </div>
+                    <p class="mt-1 text-xs text-gray-400">若預約疾病治療需要三個月內診斷證明</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">預約時長</label>
+                    <div class="mt-2 flex gap-4">
+                        <label class="inline-flex items-center"><input type="radio" name="duration" value="30"
+                                onchange="syncData()" class="mr-2 focus:ring-green-500 text-green-600"><span
+                                class="text-sm">30分</span></label>
+                        <label class="inline-flex items-center"><input type="radio" name="duration" value="60" checked
+                                onchange="syncData()" class="mr-2 focus:ring-green-500 text-green-600"><span
+                                class="text-sm">60分</span></label>
+                        <label class="inline-flex items-center"><input type="radio" name="duration" value="90"
+                                onchange="syncData()" class="mr-2 focus:ring-green-500 text-green-600"><span
+                                class="text-sm">90分</span></label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-400">建議時間60分較為充足</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">期望預約時段
@@ -144,6 +163,10 @@
                 <div class="flex justify-between border-b border-gray-200 pb-1">
                     <span class="text-gray-500">診斷證明/照會/醫囑</span>
                     <span id="review-medical-proof" class="font-bold text-gray-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-gray-200 pb-1">
+                    <span class="text-gray-500">預約時長</span>
+                    <span id="review-duration" class="font-bold text-gray-800"></span>
                 </div>
                 <div>
                     <span class="text-gray-500 block mb-1">期望時間</span>
@@ -372,12 +395,11 @@
                 requestVal = requestEl.value.trim();
             }
 
-            // 新增：取得醫療證明勾選狀態
-            const hasMedicalProofEl = document.getElementById('has_medical_proof');
-            let hasMedicalProof = false;
-            if (hasMedicalProofEl) {
-                hasMedicalProof = hasMedicalProofEl.checked;
-            }
+            // 新增：取得醫療證明勾選狀態 (Radio)
+            const medicalProofVal = document.querySelector('input[name="diagnosis"]:checked')?.value || "否";
+
+            // 新增：取得預約時長 (Radio)
+            const durationVal = document.querySelector('input[name="duration"]:checked')?.value || "60";
 
             // 2. 必填檢查
             if (!name || !phone || !time) {
@@ -391,11 +413,11 @@
 
             // ★★★ 修正處：判定顯示邏輯 ★★★
             // 如果 emailVal 有文字，就顯示文字；如果是空字串，就顯示 "(未填寫)"
-            // 絕對不會再顯示 [object HTMLInputElement]
             document.getElementById('review-email').textContent = (emailVal !== "") ? emailVal : "(未填寫)";
 
             document.getElementById('review-staff').textContent = document.getElementById('staff').value || "(不指定)";
-            document.getElementById('review-medical-proof').textContent = hasMedicalProof ? "有" : "無";
+            document.getElementById('review-medical-proof').textContent = medicalProofVal;
+            document.getElementById('review-duration').textContent = `${durationVal}分`;
             document.getElementById('review-time').textContent = time;
             document.getElementById('review-request').textContent = (requestVal !== "") ? requestVal : "(未填寫)";
 
@@ -438,9 +460,8 @@
                 const formData = getFormData();
                 if (liff.isInClient()) {
                     // ★ 修改：LINE 訊息內容也改為動態 (或是通用詞)
-                    // 這裡先用 "指定人員" 以保持通用，或可用 g_staffTitle 變數                  
                     const emailMsg = formData.form_email ? `\nEmail: ${formData.form_email}` : "";
-                    const msg = `預約資料如下\n姓名: ${formData.form_name}\n電話: ${formData.form_phone}${emailMsg}\n指定${g_staffTitle}: ${formData.form_staff}\n期望時間: ${formData.form_time}`;
+                    const msg = `預約資料如下\n姓名: ${formData.form_name}\n電話: ${formData.form_phone}${emailMsg}\n指定${g_staffTitle}: ${formData.form_staff}\n預約時長: ${formData.form_duration}分\n期望時間: ${formData.form_time}`;
 
                     await liff.sendMessages([{ type: 'text', text: msg }]);
                 }
@@ -464,8 +485,9 @@
                 form_phone: document.getElementById('phone').value,
                 form_email: document.getElementById('email').value.trim(),
                 form_staff: document.getElementById('staff').value,
+                form_duration: document.querySelector('input[name="duration"]:checked')?.value || "60",
                 form_time: document.getElementById('time_slots').value,
-                form_medical_proof: document.getElementById('has_medical_proof').checked ? "有" : "無",
+                form_medical_proof: document.querySelector('input[name="diagnosis"]:checked')?.value || "否",
                 form_request: document.getElementById('user_request').value.trim()
             };
         }
