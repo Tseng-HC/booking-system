@@ -355,7 +355,7 @@
                 fetch(GAS_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'track_open', uid: g_uid, name: g_displayName }) }).catch(e => console.log(e));
 
                 // 這裡的文字可以考慮之後也動態化
-                if (liff.isInClient()) await liff.sendMessages([{ type: 'text', text: '開啟預約系統' }]);
+                if (liff.isInClient()) await liff.sendMessages([{ type: 'text', text: '我要預約' }]);
 
                 startHeartbeat(); startSessionTimer(); document.getElementById('loading').style.display = 'none';
             } catch (error) { console.error('Init Error:', error); document.getElementById('loading').style.display = 'none'; showToast('系統初始化異常 (請檢查 LIFF 設定)', true); }
